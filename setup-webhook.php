@@ -15,7 +15,7 @@ echo "============================\n\n";
 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
 $host = $_SERVER['HTTP_HOST'];
 $path = dirname($_SERVER['REQUEST_URI']);
-$webhook_url = $protocol . "://" . $host . $path . "/index.php";
+$webhook_url = getenv('WEBHOOK_URL') ?: ($protocol . "://" . $host . $path . "/index.php");
 
 echo "📡 آدرس Webhook: " . $webhook_url . "\n\n";
 
