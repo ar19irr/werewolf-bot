@@ -7,49 +7,55 @@
 http_response_code(200);
 echo '{"ok":true}';
 
+// 📝 لاگ شروع
+file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | START\n", FILE_APPEND);
+
 // گرفتن داده خام از تلگرام
 $json = file_get_contents('php://input');
-
-// 📝 لاگ برای دیباگ
-file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | RAW: " . $json . "\n", FILE_APPEND);
 
 if (empty($json)) {
     file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | EMPTY JSON\n", FILE_APPEND);
     exit;
 }
 
-// 🔄 تبدیل JSON به آرایه
-$data = json_decode($json, true);
+file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | GOT JSON\n", FILE_APPEND);
 
-if (!$data || !is_array($data)) {
-    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | INVALID JSON: " . $json . "\n", FILE_APPEND);
+// 📦 لود کردن فایل‌ها - یکی یکی با چک
+try {
+    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | Loading config...\n", FILE_APPEND);
+    require_once 'config.php';
+    
+    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | Loading functions...\n", FILE_APPEND);
+    require_once 'functions.php';
+    
+    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | Loading database...\n", FILE_APPEND);
+    require_once 'database.php';
+    
+    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | Loading game...\n", FILE_APPEND);
+    require_once 'game.php';
+    
+    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | Loading factory...\n", FILE_APPEND);
+    require_once 'ROLES_PATCH/factory.php';
+    
+    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | Loading commands...\n", FILE_APPEND);
+    require_once 'commands.php';
+    
+    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | All files loaded!\n", FILE_APPEND);
+} catch (Exception $e) {
+    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | REQUIRE ERROR: " . $e->getMessage() . "\n", FILE_APPEND);
     exit;
 }
 
-file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | PARSED: " . print_r($data, true) . "\n", FILE_APPEND);
-
-// 📦 لود کردن فایل‌ها
-require_once 'config.php';
-require_once 'functions.php';
-require_once 'database.php';
-require_once 'game.php';
-require_once 'ROLES_PATCH/factory.php';
-require_once 'commands.php';
+// 🔄 تبدیل JSON به آرایه
+$data = json_decode($json, true);
+file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | JSON decoded\n", FILE_APPEND);
 
 // 🎮 پردازش آپدیت
 try {
-    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | BEFORE processUpdate\n", FILE_APPEND);
-    
-    if (!function_exists('processUpdate')) {
-        file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | ERROR: processUpdate not found!\n", FILE_APPEND);
-        exit;
-    }
-    
     processUpdate($data);
     file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | SUCCESS\n", FILE_APPEND);
 } catch (Exception $e) {
     file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | ERROR: " . $e->getMessage() . "\n", FILE_APPEND);
-    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | STACK: " . $e->getTraceAsString() . "\n", FILE_APPEND);
 }
 
 exit;
