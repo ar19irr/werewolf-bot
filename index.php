@@ -10,34 +10,38 @@ echo '{"ok":true}';
 // گرفتن داده خام از تلگرام
 $json = file_get_contents('php://input');
 
+// 📝 لاگ برای دیباگ
+file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | RAW: " . $json . "\n", FILE_APPEND);
+
 if (empty($json)) {
+    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | EMPTY JSON\n", FILE_APPEND);
     exit;
 }
-
-// 📝 لاگ برای دیباگ
-file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | " . $json . "\n", FILE_APPEND);
 
 // 🔄 تبدیل JSON به آرایه
 $data = json_decode($json, true);
 
 if (!$data || !is_array($data)) {
-    error_log("Invalid JSON: " . $json);
+    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | INVALID JSON: " . $json . "\n", FILE_APPEND);
     exit;
 }
+
+file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | PARSED: " . print_r($data, true) . "\n", FILE_APPEND);
 
 // 📦 لود کردن فایل‌ها
 require_once 'config.php';
 require_once 'functions.php';
 require_once 'database.php';
 require_once 'game.php';
-require_once __DIR__ . '/ROLES_PATCH/factory.php';
+require_once 'ROLES_PATCH/factory.php';
 require_once 'commands.php';
 
 // 🎮 پردازش آپدیت
 try {
     processUpdate($data);
+    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | SUCCESS\n", FILE_APPEND);
 } catch (Exception $e) {
-    error_log("Error: " . $e->getMessage());
+    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | ERROR: " . $e->getMessage() . "\n", FILE_APPEND);
 }
 
 exit;
