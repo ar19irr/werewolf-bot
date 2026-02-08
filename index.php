@@ -38,10 +38,18 @@ require_once 'commands.php';
 
 // 🎮 پردازش آپدیت
 try {
+    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | BEFORE processUpdate\n", FILE_APPEND);
+    
+    if (!function_exists('processUpdate')) {
+        file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | ERROR: processUpdate not found!\n", FILE_APPEND);
+        exit;
+    }
+    
     processUpdate($data);
     file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | SUCCESS\n", FILE_APPEND);
 } catch (Exception $e) {
     file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | ERROR: " . $e->getMessage() . "\n", FILE_APPEND);
+    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | STACK: " . $e->getTraceAsString() . "\n", FILE_APPEND);
 }
 
 exit;
