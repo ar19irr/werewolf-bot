@@ -30,7 +30,7 @@ require_once 'config.php';
 require_once 'functions.php';
 require_once 'database.php';
 require_once 'game.php';
-require_once 'ROLES_PATCH/factory.php';
+require_once __DIR__ . '/ROLES_PATCH/factory.php';
 require_once 'commands.php';
 
 // 🎮 پردازش آپدیت
