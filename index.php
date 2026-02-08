@@ -20,26 +20,12 @@ if (empty($json)) {
 
 file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | GOT JSON\n", FILE_APPEND);
 
-// 📦 لود کردن فایل‌ها - یکی یکی با چک
+// 📦 لود کردن فایل‌ها
 try {
-    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | Loading config...\n", FILE_APPEND);
     require_once 'config.php';
-    
-    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | Loading functions...\n", FILE_APPEND);
     require_once 'functions.php';
-    
-    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | Loading database...\n", FILE_APPEND);
     require_once 'database.php';
-    
-    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | Loading game...\n", FILE_APPEND);
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-    require_once 'game.php';
-    
-    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | Loading factory...\n", FILE_APPEND);
-    require_once 'ROLES_PATCH/factory.php';
-    
-    file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | Loading commands...\n", FILE_APPEND);
+    require_once 'game.php';  // این خودش factory رو لود می‌کنه
     require_once 'commands.php';
     
     file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | All files loaded!\n", FILE_APPEND);
