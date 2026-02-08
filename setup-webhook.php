@@ -5,7 +5,7 @@ require_once 'functions.php';
 echo "🐺 " . BOT_NAME . " - تنظیم Webhook\n";
 echo "============================\n\n";
 
-$webhook_url = "https://werewolf-bot-production.up.railway.app/index.php";
+$webhook_url = "https://werewolf-bot-2s55.onrender.com/index.php";
 
 echo "📡 آدرس Webhook: " . $webhook_url . "\n\n";
 
