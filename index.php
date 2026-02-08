@@ -32,6 +32,8 @@ try {
     require_once 'database.php';
     
     file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | Loading game...\n", FILE_APPEND);
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
     require_once 'game.php';
     
     file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | Loading factory...\n", FILE_APPEND);
