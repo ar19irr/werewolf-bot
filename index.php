@@ -7,6 +7,10 @@
 http_response_code(200);
 echo '{"ok":true}';
 
+// ⬇️ بعد پردازش رو انجام بده
+$json = file_get_contents('php://input');
+// ...
+
 // 📝 لاگ شروع
 file_put_contents('bot_debug.log', date('Y-m-d H:i:s') . " | START\n", FILE_APPEND);
 
